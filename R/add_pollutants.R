@@ -45,13 +45,19 @@ add_schwartz_pollutants <- function(d) {
     stop("input dataframe must have a column called 'end_date'")
   }
 
+  if (any(c(d$start_date < as.Date("2000-01-01"), d$start_date > as.Date("2016-12-31"),
+      d$end_date < as.Date("2000-01-01"), d$end_date > as.Date("2016-12-31")))) {
+    stop("one or more dates are out of range. data is available 2000-2016.")
+  }
+
   d <-
     expand_dates(d) %>%
-    dplyr::left_join(site_to_geohash, by = c('sitecode', 'site_index')) %>%
+    dplyr::left_join(schwartz_grid_geohashed %>%
+                       mutate(site_index = as.character(site_index)), by = c('sitecode', 'site_index')) %>%
     dplyr::filter(!is.na(gh6)) %>%
     dplyr::mutate(gh3 = stringr::str_sub(gh6, 1, 3),
                   year = lubridate::year(date)) %>%
-    dplyr::left_join(geohash_20k_pop, by = 'gh3')
+    dplyr::left_join(gh3_combined_lookup, by = 'gh3')
 
   unique_gh3_year <-
     d %>%

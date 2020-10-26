@@ -1,13 +1,14 @@
 Package: schwartzGeohashPM
-Title: What the Package Does (One Line, Title Case)
+Title: Add PM2.5, NO2, and O3 Concentrations to Data Based on Geohash
 Version: 0.0.0.9000
-Authors@R: 
-    person(given = "First",
-           family = "Last",
+Authors@R: c(
+    person(given = "Erika",
+           family = "Rasnick",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+           email = "erika.rasnick@cchmc.org"),
+    person("Cole", "Brokamp", role="aut"))
+Description: Downloads estimates of PM2.5, NO2, and O3 concentrations from Schwartz model and joins them to 
+             input data based on geohashed locations and date (data available 2000 - 2016). 
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

@@ -1,0 +1,47 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# schwartzGeohashPM
+
+<!-- badges: start -->
+[![R build status](https://github.com/degauss-org/schwartzGeohashPM/workflows/R-CMD-check/badge.svg)](https://github.com/degauss-org/schwartzGeohashPM/actions)
+<!-- badges: end -->
+
+The goal of schwartzGeohashPM is to add PM2.5, NO2, and O3 concentrations to your data based on geohashed locations (usually output from the (Schwartz Grid Lookup Container)[https://github.com/degauss-org/schwartz_grid_lookup])
+
+## Installation
+
+You can install addSchwartzGeohashPM from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("remotes")
+remotes::install_github("degauss-org/schwartzGeohashPM")
+```
+## Example
+
+```{r example}
+library(schwartzGeohashPM)
+library(dplyr)
+
+d <- tibble::tribble(
+      ~id,         ~lat,    ~lon, ~site_index,      ~sitecode,  ~start_date,    ~end_date,
+      '55000100280', 39.2, -84.6,   '9607238', '211050640897', '2008-09-09', '2008-09-11',
+      '55000100281', 39.2, -84.6,   '9607238', '211050640897', '2007-08-05', '2007-08-08',
+      '55000100282', 39.2, -84.6,   '9607238', '211050640897', '2015-08-31', '2015-09-02') %>%
+    dplyr::mutate_at(vars(start_date, end_date), as.Date)
+
+add_schwartz_pollutants(d)
+```
+
