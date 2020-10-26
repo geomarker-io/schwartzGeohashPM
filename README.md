@@ -11,8 +11,8 @@ status](https://github.com/degauss-org/schwartzGeohashPM/workflows/R-CMD-check/b
 
 The goal of schwartzGeohashPM is to add PM2.5, NO2, and O3
 concentrations to your data based on geohashed locations (usually output
-from the (Schwartz Grid Lookup
-Container)\[<https://github.com/degauss-org/schwartz_grid_lookup>\])
+from the [Schwartz Grid Lookup
+Container](https://github.com/degauss-org/schwartz_grid_lookup))
 
 ## Installation
 
@@ -52,8 +52,8 @@ add_schwartz_pollutants(d)
 #> 
 ... :what (  0%) [ ETA:  ?s | Elapsed:  0s ]
 ... processing 1 of 3 ( 33%) [ ETA:  0s | Elapsed:  0s ]
-... processing 2 of 3 ( 67%) [ ETA:  9s | Elapsed: 18s ]
-... processing 3 of 3 (100%) [ ETA:  0s | Elapsed: 27s ]
+... processing 2 of 3 ( 67%) [ ETA:  6s | Elapsed: 12s ]
+... processing 3 of 3 (100%) [ ETA:  0s | Elapsed: 20s ]
 #> # A tibble: 10 x 15
 #>    id      lat   lon site_index sitecode start_date end_date   date      
 #>    <chr> <dbl> <dbl> <chr>      <chr>    <date>     <date>     <date>    
