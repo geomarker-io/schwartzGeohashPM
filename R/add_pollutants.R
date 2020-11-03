@@ -18,6 +18,8 @@ read_chunk_join <- function(d_split) {
 #'
 #' @param d dataframe with columns called 'sitecode', 'start_date', and 'end_date'
 #'          (most likely the output from the `schwartz_grid_lookup`` container)
+#' @param download_dir local path where files downloaded from s3 will be saved. Defaults to
+#'                      a folder called 's3_downloads' in the current working directory.
 #'
 #' @return the input dataframe, expanded to include one row per day between the given 'start_date'
 #'         and 'end_date', with appended columns for geohash, PM2.5, NO2, and O3 concentrations.
