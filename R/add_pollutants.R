@@ -34,7 +34,7 @@ read_chunk_join <- function(d_split) {
 #'    add_schwartz_pollutants(d)
 #' }
 #' @export
-add_schwartz_pollutants <- function(d) {
+add_schwartz_pollutants <- function(d, download_dir = fs::path_wd("s3_downloads")) {
   if (!"sitecode" %in% colnames(d)) {
     stop("input dataframe must have a column called 'sitecode'")
   }
@@ -49,6 +49,8 @@ add_schwartz_pollutants <- function(d) {
       d$end_date < as.Date("2000-01-01"), d$end_date > as.Date("2016-12-31")))) {
     stop("one or more dates are out of range. data is available 2000-2016.")
   }
+
+  message('Matching sitecodes to geohashes...')
 
   d <-
     expand_dates(d) %>%
@@ -72,8 +74,7 @@ add_schwartz_pollutants <- function(d) {
   ## add progress to downloads??
   download_s3(fl_names = files_to_dwnld,
               s3_folder_url = 's3://geomarker/schwartz/exp_estimates_1km/by_gh3_year/',
-              download_dir = fs::path_wd("s3_downloads"))
-
+              download_dir = download_dir)
 
   d_split <- d %>%
     split(f = list(d$gh3_combined, d$year), drop = TRUE)

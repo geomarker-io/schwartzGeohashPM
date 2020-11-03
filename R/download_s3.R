@@ -47,11 +47,15 @@ check_local_fls_exist <- function(fl_names, s3_folder_url, download_dir) {
 #' }
 #' @export
 download_s3 <- function(fl_names, s3_folder_url, download_dir) {
-  # check if file exists in s3
+
+  message('Checking that requested files exist in s3...')
+
   s3_exists <- purrr::map_lgl(paste0(s3_folder_url, fl_names), ~suppressMessages(aws.s3::head_object(.x)))
   if(length(s3_exists[s3_exists]) != length(s3_exists)) {
     stop("One or more requested files do not exist in the specified s3 folder.", call. = FALSE)
   }
+
+  message('Checking if requested files have already been downloaded...')
 
   fls <- check_local_fls_exist(fl_names, s3_folder_url, download_dir)
 
@@ -63,9 +67,16 @@ download_s3 <- function(fl_names, s3_folder_url, download_dir) {
     ans <- readline("Do you want to download now (Y/n)? ")
     if (!ans %in% c("", "y", "Y")) stop("aborted", call. = FALSE)
 
-    mappp::mappp(fls,
-                 ~aws.s3::save_object(object = paste0(s3_folder_url, .x),
-                                      file = paste0(download_dir, '/', .x)), parallel = FALSE)
+    xs <- 1:length(fls)
+    progressr::with_progress({
+      p <- progressr::progressor(along = xs)
+      purrr::walk(xs, function(x) {
+        p(sprintf("x=%g", x))
+        purrr::walk(fls[x],
+                    ~aws.s3::save_object(object = paste0(s3_folder_url, fls[x]),
+                                         file = paste0(download_dir, '/', fls[x])), parallel = FALSE)
+      })
+    })
     message('Download complete.')
   }
 
