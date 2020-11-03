@@ -28,17 +28,7 @@ remotes::install_github("degauss-org/schwartzGeohashPM")
 
 ``` r
 library(schwartzGeohashPM)
-library(dplyr)
-#> Warning: replacing previous import 'vctrs::data_frame' by
-#> 'tibble::data_frame' when loading 'dplyr'
-#> 
-#> Attaching package: 'dplyr'
-#> The following objects are masked from 'package:stats':
-#> 
-#>     filter, lag
-#> The following objects are masked from 'package:base':
-#> 
-#>     intersect, setdiff, setequal, union
+suppressPackageStartupMessages(library(dplyr))
 
 d <- tibble::tribble(
       ~id,         ~lat,    ~lon, ~site_index,      ~sitecode,  ~start_date,    ~end_date,
@@ -49,11 +39,7 @@ d <- tibble::tribble(
 
 add_schwartz_pollutants(d)
 #> All files are present in /Users/RASV5G/OneDrive - cchmc/schwartzGeohashPM/s3_downloads
-#> 
-... :what (  0%) [ ETA:  ?s | Elapsed:  0s ]
-... processing 1 of 3 ( 33%) [ ETA:  0s | Elapsed:  0s ]
-... processing 2 of 3 ( 67%) [ ETA:  6s | Elapsed: 12s ]
-... processing 3 of 3 (100%) [ ETA:  0s | Elapsed: 20s ]
+#> Now reading in and joining pollutant data.
 #> # A tibble: 10 x 15
 #>    id      lat   lon site_index sitecode start_date end_date   date      
 #>    <chr> <dbl> <dbl> <chr>      <chr>    <date>     <date>     <date>    

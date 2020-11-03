@@ -31,9 +31,9 @@ remotes::install_github("degauss-org/schwartzGeohashPM")
 ```
 ## Example
 
-```{r example}
+```{r example, warning = F}
 library(schwartzGeohashPM)
-library(dplyr)
+suppressPackageStartupMessages(library(dplyr))
 
 d <- tibble::tribble(
       ~id,         ~lat,    ~lon, ~site_index,      ~sitecode,  ~start_date,    ~end_date,
