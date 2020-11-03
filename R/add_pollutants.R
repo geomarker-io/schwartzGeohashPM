@@ -78,7 +78,18 @@ add_schwartz_pollutants <- function(d) {
   d_split <- d %>%
     split(f = list(d$gh3_combined, d$year), drop = TRUE)
 
-  d_split_pm <- mappp::mappp(d_split, read_chunk_join, parallel = FALSE)
+  message('Now reading in and joining pollutant data.')
+
+  xs <- 1:length(d_split)
+
+  progressr::with_progress({
+    p <- progressr::progressor(along = xs)
+    d_split_pm <- purrr::map(xs, function(x) {
+      p(sprintf("x=%g", x))
+      read_chunk_join(d_split[[x]])
+    })
+  })
+
   d_pm <- dplyr::bind_rows(d_split_pm)
   return(d_pm)
 }
