@@ -3,8 +3,8 @@ expand_dates <- function(d) {
   tidyr::unnest(d, cols = c(date))
 }
 
-read_chunk_join <- function(d_split) {
-  chunk <- qs::qread(paste0(fs::path_wd('s3_downloads'), '/', unique(d_split$gh3_combined),
+read_chunk_join <- function(d_split, download_dir) {
+  chunk <- qs::qread(paste0(download_dir, '/', unique(d_split$gh3_combined),
                             "_", unique(d_split$year), "_round1.qs")) %>%
     dplyr::mutate(sitecode = as.character(sitecode)) %>%
     dplyr::select(-site_index)
@@ -89,7 +89,7 @@ add_schwartz_pollutants <- function(d, download_dir = fs::path_wd("s3_downloads"
     p <- progressr::progressor(along = xs)
     d_split_pm <- purrr::map(xs, function(x) {
       p(sprintf("x=%g", x))
-      read_chunk_join(d_split[[x]])
+      read_chunk_join(d_split[[x]], download_dir)
     })
   })
 
