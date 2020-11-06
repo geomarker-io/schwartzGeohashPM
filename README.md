@@ -38,6 +38,9 @@ d <- tibble::tribble(
     dplyr::mutate_at(vars(start_date, end_date), as.Date)
 
 add_schwartz_pollutants(d)
+#> Matching sitecodes to geohashes...
+#> Checking that requested files exist in s3...
+#> Checking if requested files have already been downloaded...
 #> All files are present in /Users/RASV5G/OneDrive - cchmc/schwartzGeohashPM/s3_downloads
 #> Now reading in and joining pollutant data.
 #> # A tibble: 10 x 15

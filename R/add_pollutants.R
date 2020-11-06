@@ -56,8 +56,8 @@ add_schwartz_pollutants <- function(d, download_dir = fs::path_wd("s3_downloads"
 
   d <-
     expand_dates(d) %>%
-    dplyr::left_join(schwartz_grid_geohashed %>%
-                       mutate(site_index = as.character(site_index)), by = c('sitecode', 'site_index')) %>%
+    dplyr::left_join(schwartz_grid_geohashed %>% dplyr::select(-site_index),
+                     by = c('sitecode')) %>%
     dplyr::filter(!is.na(gh6)) %>%
     dplyr::mutate(gh3 = stringr::str_sub(gh6, 1, 3),
                   year = lubridate::year(date)) %>%
