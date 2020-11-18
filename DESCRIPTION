@@ -1,6 +1,6 @@
 Package: schwartzGeohashPM
 Title: Add PM2.5, NO2, and O3 Concentrations to Data Based on Geohash
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: c(
     person(given = "Erika",
            family = "Rasnick",

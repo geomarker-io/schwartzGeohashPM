@@ -6,7 +6,6 @@ expand_dates <- function(d) {
 read_chunk_join <- function(d_split, download_dir) {
   chunk <- qs::qread(paste0(download_dir, '/', unique(d_split$gh3_combined),
                             "_", unique(d_split$year), "_round1.qs")) %>%
-    dplyr::mutate(sitecode = as.character(sitecode)) %>%
     dplyr::select(-site_index)
 
   d_split_pm <- dplyr::left_join(d_split, chunk, by = c('sitecode', 'date'))
@@ -56,7 +55,7 @@ add_schwartz_pollutants <- function(d, download_dir = fs::path_wd("s3_downloads"
 
   d <-
     expand_dates(d) %>%
-    dplyr::left_join(schwartz_grid_geohashed %>% dplyr::select(-site_index),
+    dplyr::left_join(schwartz_grid_geohashed,
                      by = c('sitecode')) %>%
     dplyr::filter(!is.na(gh6)) %>%
     dplyr::mutate(gh3 = stringr::str_sub(gh6, 1, 3),
