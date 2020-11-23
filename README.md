@@ -28,34 +28,38 @@ remotes::install_github("degauss-org/schwartzGeohashPM")
 
 ``` r
 library(schwartzGeohashPM)
-suppressPackageStartupMessages(library(dplyr))
 
 d <- tibble::tribble(
       ~id,         ~lat,    ~lon, ~site_index,      ~sitecode,  ~start_date,    ~end_date,
-      '55000100280', 39.2, -84.6,   '9607238', '211050640897', '2008-09-09', '2008-09-11',
-      '55000100281', 39.2, -84.6,   '9607238', '211050640897', '2007-08-05', '2007-08-08',
-      '55000100282', 39.2, -84.6,   '9607238', '211050640897', '2015-08-31', '2015-09-02') %>%
-    dplyr::mutate_at(vars(start_date, end_date), as.Date)
+      '55000100280', 39.2, -84.6,   '9607238', 211050640897, '2008-09-09', '2008-09-11',
+      '55000100281', 39.2, -84.6,   '9607238', 211050640897, '2007-08-05', '2007-08-08',
+      '55000100282', 39.2, -84.6,   '9607238', 211050640897, '2015-08-31', '2015-09-02') %>%
+    dplyr::mutate_at(dplyr::vars(start_date, end_date), as.Date)
 
 add_schwartz_pollutants(d)
 #> Matching sitecodes to geohashes...
-#> Checking that requested files exist in s3...
-#> Checking if requested files have already been downloaded...
-#> All files are present in /Users/RASV5G/OneDrive - cchmc/schwartzGeohashPM/s3_downloads
+#> ℹ 3 files totaling 197.90 MB will be downloaded to /Users/RASV5G/OneDrive - cchmc/schwartzGeohashPM/s3_downloads
+#> ! User input requested, but session is not interactive.
+#> ℹ Assuming this is okay.
+#> → Downloading 3 files.
+#> → Got 0 files, downloading 3
+#> → Got 1 file, downloading 2
+#> → Got 2 files, downloading 1
+#> ✓ Downloaded 3 files in 41.9s.
 #> Now reading in and joining pollutant data.
 #> # A tibble: 10 x 15
 #>    id      lat   lon site_index sitecode start_date end_date   date      
-#>    <chr> <dbl> <dbl> <chr>      <chr>    <date>     <date>     <date>    
-#>  1 5500…  39.2 -84.6 9607238    2110506… 2007-08-05 2007-08-08 2007-08-05
-#>  2 5500…  39.2 -84.6 9607238    2110506… 2007-08-05 2007-08-08 2007-08-06
-#>  3 5500…  39.2 -84.6 9607238    2110506… 2007-08-05 2007-08-08 2007-08-07
-#>  4 5500…  39.2 -84.6 9607238    2110506… 2007-08-05 2007-08-08 2007-08-08
-#>  5 5500…  39.2 -84.6 9607238    2110506… 2008-09-09 2008-09-11 2008-09-09
-#>  6 5500…  39.2 -84.6 9607238    2110506… 2008-09-09 2008-09-11 2008-09-10
-#>  7 5500…  39.2 -84.6 9607238    2110506… 2008-09-09 2008-09-11 2008-09-11
-#>  8 5500…  39.2 -84.6 9607238    2110506… 2015-08-31 2015-09-02 2015-08-31
-#>  9 5500…  39.2 -84.6 9607238    2110506… 2015-08-31 2015-09-02 2015-09-01
-#> 10 5500…  39.2 -84.6 9607238    2110506… 2015-08-31 2015-09-02 2015-09-02
+#>    <chr> <dbl> <dbl> <chr>         <dbl> <date>     <date>     <date>    
+#>  1 5500…  39.2 -84.6 9607238     2.11e11 2007-08-05 2007-08-08 2007-08-05
+#>  2 5500…  39.2 -84.6 9607238     2.11e11 2007-08-05 2007-08-08 2007-08-06
+#>  3 5500…  39.2 -84.6 9607238     2.11e11 2007-08-05 2007-08-08 2007-08-07
+#>  4 5500…  39.2 -84.6 9607238     2.11e11 2007-08-05 2007-08-08 2007-08-08
+#>  5 5500…  39.2 -84.6 9607238     2.11e11 2008-09-09 2008-09-11 2008-09-09
+#>  6 5500…  39.2 -84.6 9607238     2.11e11 2008-09-09 2008-09-11 2008-09-10
+#>  7 5500…  39.2 -84.6 9607238     2.11e11 2008-09-09 2008-09-11 2008-09-11
+#>  8 5500…  39.2 -84.6 9607238     2.11e11 2015-08-31 2015-09-02 2015-08-31
+#>  9 5500…  39.2 -84.6 9607238     2.11e11 2015-08-31 2015-09-02 2015-09-01
+#> 10 5500…  39.2 -84.6 9607238     2.11e11 2015-08-31 2015-09-02 2015-09-02
 #> # … with 7 more variables: gh6 <chr>, gh3 <chr>, year <dbl>,
 #> #   gh3_combined <chr>, PM25 <dbl>, NO2 <dbl>, O3 <dbl>
 ```

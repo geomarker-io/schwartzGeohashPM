@@ -2,5 +2,4 @@
 
 export("%>%")
 export(add_schwartz_pollutants)
-export(download_s3)
 importFrom(magrittr,"%>%")

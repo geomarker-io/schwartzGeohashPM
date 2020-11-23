@@ -1,6 +1,6 @@
 Package: schwartzGeohashPM
 Title: Add PM2.5, NO2, and O3 Concentrations to Data Based on Geohash
-Version: 0.0.2
+Version: 0.0.3
 Authors@R: c(
     person(given = "Erika",
            family = "Rasnick",
@@ -28,4 +28,5 @@ Imports:
     aws.s3 (>= 0.3.12),
     tibble (>= 3.0.3),
     magrittr,
-    progressr (>= 0.6.0)
+    progressr (>= 0.6.0),
+    s3 (>= 0.1)

@@ -4,13 +4,13 @@
 \alias{add_schwartz_pollutants}
 \title{add PM2.5, NO2, and O3 concentrations to data based on geohash}
 \usage{
-add_schwartz_pollutants(d, download_dir = fs::path_wd("s3_downloads"))
+add_schwartz_pollutants(d, download_folder = fs::path_wd("s3_downloads"))
 }
 \arguments{
 \item{d}{dataframe with columns called 'sitecode', 'start_date', and 'end_date'
 (most likely the output from the `schwartz_grid_lookup`` container)}
 
-\item{download_dir}{local path where files downloaded from s3 will be saved. Defaults to
+\item{download_folder}{local path where files downloaded from s3 will be saved. Defaults to
 a folder called 's3_downloads' in the current working directory.}
 }
 \value{
