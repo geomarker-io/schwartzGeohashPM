@@ -30,4 +30,4 @@ Imports:
     magrittr,
     progressr (>= 0.6.0)
 Remotes:  
-    geomarker-io/s3
+    geomarker-io/s3 
