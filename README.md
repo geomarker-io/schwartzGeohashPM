@@ -24,6 +24,18 @@ with:
 remotes::install_github("degauss-org/schwartzGeohashPM")
 ```
 
+## s3 downlaods
+
+This package utilizes the [s3
+package](https://github.com/geomarker-io/s3). Users can pass arguments
+for `s3::s3_get_files` to `schwartzGeohashPM::add_schwartz_pollutants`.
+This is especially useful for specifying the local path where s3 files
+will be downloaded onto the user’s local machine, via the
+`download_folder` argument. The download folder can also be specified by
+setting options.
+
+    options(s3.download_folder = /path/to/folder/s3_downloads)
+
 ## Example
 
 ``` r
@@ -38,14 +50,9 @@ d <- tibble::tribble(
 
 add_schwartz_pollutants(d)
 #> Matching sitecodes to geohashes...
-#> ℹ 3 files totaling 197.90 MB will be downloaded to /Users/RASV5G/OneDrive - cchmc/schwartzGeohashPM/s3_downloads
-#> ! User input requested, but session is not interactive.
-#> ℹ Assuming this is okay.
-#> → Downloading 3 files.
-#> → Got 0 files, downloading 3
-#> → Got 1 file, downloading 2
-#> → Got 2 files, downloading 1
-#> ✓ Downloaded 3 files in 41.9s.
+#> ℹ s3://geomarker/schwartz/exp_estimates_1km/by_gh3_year/dng_2007_round1.qs already exists at /Users/RASV5G/OneDrive - cchmc/schwartzGeohashPM/s3_downloads/geomarker/schwartz/exp_estimates_1km/by_gh3_year/dng_2007_round1.qs
+#> ℹ s3://geomarker/schwartz/exp_estimates_1km/by_gh3_year/dng_2008_round1.qs already exists at /Users/RASV5G/OneDrive - cchmc/schwartzGeohashPM/s3_downloads/geomarker/schwartz/exp_estimates_1km/by_gh3_year/dng_2008_round1.qs
+#> ℹ s3://geomarker/schwartz/exp_estimates_1km/by_gh3_year/dng_2015_round1.qs already exists at /Users/RASV5G/OneDrive - cchmc/schwartzGeohashPM/s3_downloads/geomarker/schwartz/exp_estimates_1km/by_gh3_year/dng_2015_round1.qs
 #> Now reading in and joining pollutant data.
 #> # A tibble: 10 x 15
 #>    id      lat   lon site_index sitecode start_date end_date   date      

@@ -3,9 +3,8 @@ expand_dates <- function(d) {
   tidyr::unnest(d, cols = c(date))
 }
 
-read_chunk_join <- function(d_split, download_folder) {
-  chunk <- qs::qread(paste0(download_folder, '/', unique(d_split$gh3_combined),
-                            "_", unique(d_split$year), "_round1.qs")) %>%
+read_chunk_join <- function(d_split, fl_path) {
+  chunk <- qs::qread(fl_path) %>%
     dplyr::select(-site_index)
 
   d_split_pm <- dplyr::left_join(d_split, chunk, by = c('sitecode', 'date'))
@@ -17,8 +16,7 @@ read_chunk_join <- function(d_split, download_folder) {
 #'
 #' @param d dataframe with columns called 'sitecode', 'start_date', and 'end_date'
 #'          (most likely the output from the `schwartz_grid_lookup`` container)
-#' @param download_folder local path where files downloaded from s3 will be saved. Defaults to
-#'                      a folder called 's3_downloads' in the current working directory.
+#' @param ... arguments passed to \code{\link[s3]{s3_get_files}}
 #'
 #' @return the input dataframe, expanded to include one row per day between the given 'start_date'
 #'         and 'end_date', with appended columns for geohash, PM2.5, NO2, and O3 concentrations.
@@ -35,7 +33,7 @@ read_chunk_join <- function(d_split, download_folder) {
 #'    add_schwartz_pollutants(d)
 #' }
 #' @export
-add_schwartz_pollutants <- function(d, download_folder = fs::path_wd("s3_downloads")) {
+add_schwartz_pollutants <- function(d, ...) {
   if (!"sitecode" %in% colnames(d)) {
     stop("input dataframe must have a column called 'sitecode'")
   }
@@ -70,10 +68,9 @@ add_schwartz_pollutants <- function(d, download_folder = fs::path_wd("s3_downloa
     .$gh3_year
 
   files_to_dwnld <- paste0(unique_gh3_year, '_round1.qs')
-  s3_files_to_dwnlod <- paste0('s3://geomarker/schwartz/exp_estimates_1km/by_gh3_year/', files_to_dwnld)
+  s3_files_to_dwnld <- paste0('s3://geomarker/schwartz/exp_estimates_1km/by_gh3_year/', files_to_dwnld)
 
-  s3::s3_get_files(s3_uri = s3_files_to_dwnlod,
-                   download_folder = download_folder,)
+  fl_path <- purrr::map(s3_files_to_dwnld, ~s3::s3_get(s3_uri = .x))
 
   d_split <- d %>%
     split(f = list(d$gh3_combined, d$year), drop = TRUE)
@@ -86,8 +83,7 @@ add_schwartz_pollutants <- function(d, download_folder = fs::path_wd("s3_downloa
     p <- progressr::progressor(along = xs)
     d_split_pm <- purrr::map(xs, function(x) {
       p(sprintf("x=%g", x))
-      read_chunk_join(d_split[[x]],
-                      paste0(download_folder, '/geomarker/schwartz/exp_estimates_1km/by_gh3_year/'))
+      read_chunk_join(d_split[[x]], fl_path[[x]])
     })
   })
 
