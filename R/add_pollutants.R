@@ -70,9 +70,20 @@ add_schwartz_pollutants <- function(d, ...) {
   files_to_dwnld <- paste0(unique_gh3_year, '_round1.qs')
   s3_files_to_dwnld <- paste0('s3://geomarker/schwartz/exp_estimates_1km/by_gh3_year/', files_to_dwnld)
 
-  fl_path <- s3::s3_get_files(s3_files_to_dwnld)
- # fl_path <- purrr::map(s3_files_to_dwnld, ~s3::s3_get(s3_uri = .x))
 
+  # download files from s3
+  fl_path <- s3::s3_get_files(s3_files_to_dwnld)
+
+  # extract unique gh3 and year from file paths
+  d_fl_path <- fl_path %>%
+    tidyr::unnest(file_path) %>%
+    dplyr::mutate(split_str = stringr::str_split(s3_uri, '/')) %>%
+    tidyr::unnest(split_str) %>%
+    dplyr::group_by(s3_uri) %>%
+    dplyr::slice_tail() %>%
+    dplyr::mutate(gh3_year = stringr::str_sub(split_str, 1,  -11))
+
+  # split data by gh3 and year
   d_split <- d %>%
     split(f = list(d$gh3_combined, d$year), drop = TRUE)
 
@@ -84,7 +95,9 @@ add_schwartz_pollutants <- function(d, ...) {
     p <- progressr::progressor(along = xs)
     d_split_pm <- purrr::map(xs, function(x) {
       p(sprintf("x=%g", x))
-      read_chunk_join(d_split[[x]], fl_path$file_path[[x]])
+      read_chunk_join(d_split[[x]],
+                      # ensure d_split chunk matches file path
+                      d_fl_path[d_fl_path$gh3_year == paste0(unique(d_split[[x]]$gh3_combined), "_", unique(d_split[[x]]$year)),]$file_path)
     })
   })
 
