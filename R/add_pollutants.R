@@ -70,7 +70,8 @@ add_schwartz_pollutants <- function(d, ...) {
   files_to_dwnld <- paste0(unique_gh3_year, '_round1.qs')
   s3_files_to_dwnld <- paste0('s3://geomarker/schwartz/exp_estimates_1km/by_gh3_year/', files_to_dwnld)
 
-  fl_path <- purrr::map(s3_files_to_dwnld, ~s3::s3_get(s3_uri = .x))
+  fl_path <- s3::s3_get_files(s3_files_to_dwnld)
+ # fl_path <- purrr::map(s3_files_to_dwnld, ~s3::s3_get(s3_uri = .x))
 
   d_split <- d %>%
     split(f = list(d$gh3_combined, d$year), drop = TRUE)
@@ -83,7 +84,7 @@ add_schwartz_pollutants <- function(d, ...) {
     p <- progressr::progressor(along = xs)
     d_split_pm <- purrr::map(xs, function(x) {
       p(sprintf("x=%g", x))
-      read_chunk_join(d_split[[x]], fl_path[[x]])
+      read_chunk_join(d_split[[x]], fl_path$file_path[[x]])
     })
   })
 

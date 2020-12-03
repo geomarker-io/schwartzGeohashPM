@@ -22,13 +22,11 @@ Imports:
     purrr (>= 0.3.4),
     tidyr (>= 1.0.0),
     qs (>= 0.23.3),
-    fs (>= 1.4.1),
     stringr (>= 1.4.0),
     lubridate (>= 1.7.4),
-    aws.s3 (>= 0.3.12),
     tibble (>= 3.0.3),
     magrittr,
     progressr (>= 0.6.0),
-    s3
+    s3 (>= 0.1)
 Remotes: 
     geomarker-io/s3 
