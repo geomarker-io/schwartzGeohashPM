@@ -30,3 +30,5 @@ Imports:
     s3 (>= 0.2.1)
 Remotes: 
     geomarker-io/s3 
+Suggests: 
+    testthat
