@@ -5,7 +5,7 @@ test_that("add_pollutants downloads chunks and joins to data", {
     "AWS_SECRET_ACCESS_KEY" = NA
   ), {
     expect_identical(
-      add_schwartz_pollutants(example_input()),
+      add_schwartz_pollutants(example_input(), confirm = FALSE),
       example_output()
     )
   })

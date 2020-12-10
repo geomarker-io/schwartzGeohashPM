@@ -72,7 +72,7 @@ add_schwartz_pollutants <- function(d, ...) {
 
 
   # download files from s3
-  fl_path <- s3::s3_get_files(s3_files_to_dwnld)
+  fl_path <- s3::s3_get_files(s3_files_to_dwnld, ...)
 
   # extract unique gh3 and year from file paths
   d_fl_path <- fl_path %>%
