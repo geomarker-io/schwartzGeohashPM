@@ -3,7 +3,8 @@ expand_dates <- function(d) {
   tidyr::unnest(d, cols = c(date))
 }
 
-read_chunk_join <- function(d_split, fl_path) {
+read_chunk_join <- function(d_split, fl_path, verbose) {
+  if(verbose) message("processing ", fl_path, " ...")
   chunk <- qs::qread(fl_path) %>%
     dplyr::select(-site_index)
 
@@ -16,6 +17,8 @@ read_chunk_join <- function(d_split, fl_path) {
 #'
 #' @param d dataframe with columns called 'sitecode', 'start_date', and 'end_date'
 #'          (most likely the output from the `schwartz_grid_lookup`` container)
+#' @param verbose if TRUE a statement is printed to the console telling the user
+#'                which chunk file is currently being processed. Defaults to FALSE.
 #' @param ... arguments passed to \code{\link[s3]{s3_get_files}}
 #'
 #' @return the input dataframe, expanded to include one row per day between the given 'start_date'
@@ -33,7 +36,7 @@ read_chunk_join <- function(d_split, fl_path) {
 #'    add_schwartz_pollutants(d)
 #' }
 #' @export
-add_schwartz_pollutants <- function(d, ...) {
+add_schwartz_pollutants <- function(d, verbose = FALSE, ...) {
   if (!"sitecode" %in% colnames(d)) {
     stop("input dataframe must have a column called 'sitecode'")
   }
@@ -97,7 +100,8 @@ add_schwartz_pollutants <- function(d, ...) {
       p(sprintf("x=%g", x))
       read_chunk_join(d_split[[x]],
                       # ensure d_split chunk matches file path
-                      d_fl_path[d_fl_path$gh3_year == paste0(unique(d_split[[x]]$gh3_combined), "_", unique(d_split[[x]]$year)),]$file_path)
+                      d_fl_path[d_fl_path$gh3_year == paste0(unique(d_split[[x]]$gh3_combined), "_", unique(d_split[[x]]$year)),]$file_path,
+                      verbose)
     })
   })
 

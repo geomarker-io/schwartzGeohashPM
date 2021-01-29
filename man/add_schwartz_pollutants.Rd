@@ -4,11 +4,14 @@
 \alias{add_schwartz_pollutants}
 \title{add PM2.5, NO2, and O3 concentrations to data based on geohash}
 \usage{
-add_schwartz_pollutants(d, ...)
+add_schwartz_pollutants(d, verbose = FALSE, ...)
 }
 \arguments{
 \item{d}{dataframe with columns called 'sitecode', 'start_date', and 'end_date'
 (most likely the output from the `schwartz_grid_lookup`` container)}
+
+\item{verbose}{if TRUE a statement is printed to the console telling the user
+which chunk file is currently being processed. Defaults to FALSE.}
 
 \item{...}{arguments passed to \code{\link[s3]{s3_get_files}}}
 }
