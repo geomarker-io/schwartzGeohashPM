@@ -10,9 +10,10 @@ status](https://github.com/degauss-org/schwartzGeohashPM/workflows/R-CMD-check/b
 <!-- badges: end -->
 
 The goal of schwartzGeohashPM is to add PM2.5, NO2, and O3
-concentrations to your data based on geohashed locations (usually output
+concentrations to data based on `sitecode` (obtained 
 from the [Schwartz Grid Lookup
-Container](https://github.com/degauss-org/schwartz_grid_lookup))
+Container](https://github.com/degauss-org/schwartz_grid_lookup), which requires
+authenticated access). 
 
 ## Installation
 
