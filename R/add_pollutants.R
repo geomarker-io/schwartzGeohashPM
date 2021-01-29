@@ -4,7 +4,7 @@ expand_dates <- function(d) {
 }
 
 read_chunk_join <- function(d_split, fl_path, verbose) {
-  if(verbose) message("processing ", fl_path, " ...")
+  if(verbose) message("processing ", stringr::str_split(fl_path, '/')[[1]][length(stringr::str_split(fl_path, '/')[[1]])], " ...")
   chunk <- qs::qread(fl_path) %>%
     dplyr::select(-site_index)
 
