@@ -46,7 +46,7 @@ add_schwartz_pollutants <- function(d, ...) {
 
   if (any(c(d$start_date < as.Date("2000-01-01"), d$start_date > as.Date("2016-12-31"),
       d$end_date < as.Date("2000-01-01"), d$end_date > as.Date("2016-12-31")))) {
-    stop("one or more dates are out of range. data is available 2000-2016.")
+    warning("one or more dates are out of range. data is available 2000-2016.")
   }
 
   message('Matching sitecodes to geohashes...')
