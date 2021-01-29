@@ -31,4 +31,7 @@ Imports:
 Remotes: 
     geomarker-io/s3 
 Suggests: 
-    testthat
+    testthat,
+    cli,
+    fs,
+    withr
