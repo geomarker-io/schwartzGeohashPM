@@ -10,10 +10,9 @@ status](https://github.com/degauss-org/schwartzGeohashPM/workflows/R-CMD-check/b
 <!-- badges: end -->
 
 The goal of schwartzGeohashPM is to add PM2.5, NO2, and O3
-concentrations to data based on `sitecode` (obtained 
+concentrations to your data based on geohashed locations (usually output
 from the [Schwartz Grid Lookup
-Container](https://github.com/degauss-org/schwartz_grid_lookup), which requires
-authenticated access). 
+Container](https://github.com/degauss-org/schwartz_grid_lookup))
 
 ## Installation
 
@@ -25,7 +24,7 @@ with:
 remotes::install_github("degauss-org/schwartzGeohashPM")
 ```
 
-## s3 downlaods
+## s3 downloads
 
 This package utilizes the [s3
 package](https://github.com/geomarker-io/s3). Users can pass arguments
@@ -52,13 +51,11 @@ d <- tibble::tribble(
 add_schwartz_pollutants(d)
 #> Matching sitecodes to geohashes...
 #> ℹ 3 files totaling 197.90 MB will be downloaded to /Users/RASV5G/OneDrive - cchmc/schwartzGeohashPM/s3_downloads
-#> ! User input requested, but session is not interactive.
-#> ℹ Assuming this is okay.
 #> → Downloading 3 files.
 #> → Got 0 files, downloading 3
 #> → Got 1 file, downloading 2
 #> → Got 2 files, downloading 1
-#> ✓ Downloaded 3 files in 43ms.
+#> ✓ Downloaded 3 files in 2m 50.9s.
 #> Now reading in and joining pollutant data.
 #> # A tibble: 10 x 15
 #>    id      lat   lon site_index sitecode start_date end_date   date      

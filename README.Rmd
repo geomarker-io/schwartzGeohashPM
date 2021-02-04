@@ -30,7 +30,7 @@ You can install addSchwartzGeohashPM from [GitHub](https://github.com/) with:
 remotes::install_github("degauss-org/schwartzGeohashPM")
 ```
 
-## s3 downlaods
+## s3 downloads
 
 This package utilizes the [s3 package](https://github.com/geomarker-io/s3). Users can pass arguments for `s3::s3_get_files` to  `schwartzGeohashPM::add_schwartz_pollutants`. This is especially useful for specifying the local path where s3 files will be downloaded onto the user's local machine, via the `download_folder` argument. The download folder can also be specified by setting options.
 

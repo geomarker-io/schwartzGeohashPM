@@ -3,7 +3,7 @@ expand_dates <- function(d) {
   tidyr::unnest(d, cols = c(date))
 }
 
-read_chunk_join <- function(d_split, fl_path, verbose) {
+read_chunk_join <- function(d_split, fl_path, verbose=FALSE) {
   if(verbose) message("processing ", stringr::str_split(fl_path, '/')[[1]][length(stringr::str_split(fl_path, '/')[[1]])], " ...")
   chunk <- qs::qread(fl_path) %>%
     dplyr::select(-site_index)
@@ -38,24 +38,35 @@ read_chunk_join <- function(d_split, fl_path, verbose) {
 #' @export
 add_schwartz_pollutants <- function(d, verbose = FALSE, ...) {
   if (!"sitecode" %in% colnames(d)) {
-    stop("input dataframe must have a column called 'sitecode'")
+    cli::cli_alert_error("input dataframe must have a column called 'sitecode'")
+    stop()
   }
   if (!"start_date" %in% colnames(d)) {
-    stop("input dataframe must have a column called 'start_date'")
+    cli::cli_alert_error("input dataframe must have a column called 'start_date'")
+    stop()
   }
   if (!"end_date" %in% colnames(d)) {
-    stop("input dataframe must have a column called 'end_date'")
+    cli::cli_alert_error("input dataframe must have a column called 'end_date'")
+    stop()
   }
 
   if (any(c(d$start_date < as.Date("2000-01-01"), d$start_date > as.Date("2016-12-31"),
       d$end_date < as.Date("2000-01-01"), d$end_date > as.Date("2016-12-31")))) {
-    warning("one or more dates are out of range. data is available 2000-2016.")
+    cli::cli_alert_warning("one or more dates are out of range. data is available 2000-2016.")
   }
+
+  d_missing_sitecode <- dplyr::filter(d, is.na(sitecode))
+
+  if (nrow(d_missing_sitecode) > 0) cli::cli_alert_warning('sitecode is missing for {nrow(d_missing_sitecode)} row{?s}')
+
+  d_missing_sitecode <- expand_dates(d_missing_sitecode)
 
   message('Matching sitecodes to geohashes...')
 
   d <-
-    expand_dates(d) %>%
+    d %>%
+    dplyr::filter(!is.na(sitecode)) %>%
+    expand_dates() %>%
     dplyr::left_join(schwartz_grid_geohashed,
                      by = c('sitecode')) %>%
     dplyr::filter(!is.na(gh6)) %>%
@@ -72,7 +83,6 @@ add_schwartz_pollutants <- function(d, verbose = FALSE, ...) {
 
   files_to_dwnld <- paste0(unique_gh3_year, '_round1.qs')
   s3_files_to_dwnld <- paste0('s3://geomarker/schwartz/exp_estimates_1km/by_gh3_year/', files_to_dwnld)
-
 
   # download files from s3
   fl_path <- s3::s3_get_files(s3_files_to_dwnld, ...)
@@ -106,6 +116,8 @@ add_schwartz_pollutants <- function(d, verbose = FALSE, ...) {
   })
 
   d_pm <- dplyr::bind_rows(d_split_pm)
+
+  if (nrow(d_missing_sitecode) > 0) d_pm <- dplyr::bind_rows(d_missing_sitecode, d_pm)
 
   if ("index_date" %in% colnames(d)) {
    d_pm <- d_pm %>%

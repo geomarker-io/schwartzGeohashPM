@@ -26,3 +26,24 @@ example_output <- function() {
   ) %>%
     dplyr::mutate_at(dplyr::vars(start_date, end_date, date), as.Date)
 }
+
+example_input_missing_sitecode <- function() {
+  tibble::tribble(
+    ~id,         ~lat,    ~lon, ~site_index,      ~sitecode,  ~start_date,    ~end_date,
+    '55000100280', 39.2, -84.6,   NA, NA, '2008-09-09', '2008-09-11',
+    '55000100282', 39.2, -84.6,   '9607238', 211050640897, '2015-08-31', '2015-09-02') %>%
+    dplyr::mutate_at(dplyr::vars(start_date, end_date), as.Date)
+}
+
+example_output_missing_sitecode <- function() {
+  tibble::tribble(
+    ~id, ~lat,  ~lon, ~site_index,    ~sitecode,  ~start_date,    ~end_date,        ~date,     ~gh6,  ~gh3, ~year, ~gh3_combined, ~PM25, ~NO2,  ~O3,
+    "55000100280", 39.2, -84.6,   NA, NA, "2008-09-09", "2008-09-11", "2008-09-09", NA, NA,  NA,         NA,   NA, NA, NA,
+    "55000100280", 39.2, -84.6,   NA, NA, "2008-09-09", "2008-09-11", "2008-09-10", NA, NA,  NA,         NA,   NA, NA, NA,
+    "55000100280", 39.2, -84.6,   NA, NA, "2008-09-09", "2008-09-11", "2008-09-11", NA, NA,  NA,         NA,   NA, NA, NA,
+    "55000100282", 39.2, -84.6,   "9607238", 211050640897, "2015-08-31", "2015-09-02", "2015-08-31", "dngz52", "dng",  2015,         "dng",  12.3, 32.7, 33.6,
+    "55000100282", 39.2, -84.6,   "9607238", 211050640897, "2015-08-31", "2015-09-02", "2015-09-01", "dngz52", "dng",  2015,         "dng",  17.9, 34.8,   44,
+    "55000100282", 39.2, -84.6,   "9607238", 211050640897, "2015-08-31", "2015-09-02", "2015-09-02", "dngz52", "dng",  2015,         "dng",  22.8, 34.2, 48.6
+  ) %>%
+    dplyr::mutate_at(dplyr::vars(start_date, end_date, date), as.Date)
+}
