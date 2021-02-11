@@ -90,9 +90,9 @@ add_schwartz_pollutants <- function(d, verbose = FALSE, ...) {
   # extract unique gh3 and year from file paths
   d_fl_path <- fl_path %>%
     tidyr::unnest(file_path) %>%
-    dplyr::mutate(split_str = stringr::str_split(s3_uri, '/')) %>%
+    dplyr::mutate(split_str = stringr::str_split(uri, '/')) %>%
     tidyr::unnest(split_str) %>%
-    dplyr::group_by(s3_uri) %>%
+    dplyr::group_by(uri) %>%
     dplyr::slice_tail() %>%
     dplyr::mutate(gh3_year = stringr::str_sub(split_str, 1,  -11))
 

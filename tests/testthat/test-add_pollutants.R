@@ -12,7 +12,7 @@ test_that("add_pollutants downloads chunks and joins to data", {
   delete_test_download_folder()
 })
 
-test_that("add_pollutants downloads chunks and joins to data", {
+test_that("add_pollutants downloads chunks and joins to data with missing sitecode", {
   delete_test_download_folder()
   withr::with_envvar(new = c(
     "AWS_ACCESS_KEY_ID" = NA,
