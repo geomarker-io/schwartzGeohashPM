@@ -14,7 +14,7 @@ Encoding: UTF-8
 LazyData: true
 StagedInstall: no
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 Depends: 
     R (>= 2.10)
 Imports: 
