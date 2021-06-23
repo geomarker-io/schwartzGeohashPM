@@ -1,6 +1,12 @@
-expand_dates <- function(d) {
-  d <- dplyr::mutate(d, date = purrr::map2(start_date, end_date, ~seq.Date(from = .x, to = .y, by = 'day')))
-  tidyr::unnest(d, cols = c(date))
+prep_data <- function(d) {
+  dht::check_for_column(d, 'sitecode', d$sitecode)
+  dht::check_for_column(d, 'start_date', d$start_date)
+  dht::check_for_column(d, 'end_date', d$end_date)
+
+  d$start_date <- dht::check_dates(d$start_date)
+  d$end_date <- dht::check_dates(d$end_date)
+  dht::check_end_after_start_date(d$start_date, d$end_date)
+  return(d)
 }
 
 read_chunk_join <- function(d_split, fl_path, verbose=FALSE) {
@@ -37,41 +43,34 @@ read_chunk_join <- function(d_split, fl_path, verbose=FALSE) {
 #' }
 #' @export
 add_schwartz_pollutants <- function(d, verbose = FALSE, ...) {
-  if (!"sitecode" %in% colnames(d)) {
-    cli::cli_alert_error("input dataframe must have a column called 'sitecode'")
-    stop()
-  }
-  if (!"start_date" %in% colnames(d)) {
-    cli::cli_alert_error("input dataframe must have a column called 'start_date'")
-    stop()
-  }
-  if (!"end_date" %in% colnames(d)) {
-    cli::cli_alert_error("input dataframe must have a column called 'end_date'")
-    stop()
-  }
+  d <- prep_data(d)
 
-  if (any(c(d$start_date < as.Date("2000-01-01"), d$start_date > as.Date("2016-12-31"),
-      d$end_date < as.Date("2000-01-01"), d$end_date > as.Date("2016-12-31")))) {
-    cli::cli_alert_warning("one or more dates are out of range. data is available 2000-2016.")
-  }
-
+  # check for missing sitecodes
   d_missing_sitecode <- dplyr::filter(d, is.na(sitecode))
+  if (nrow(d_missing_sitecode) > 0) {
+    cli::cli_alert_warning('sitecode is missing for {nrow(d_missing_sitecode)} input row{?s}')
+    d_missing_sitecode <- dht::expand_dates(d_missing_sitecode, by = 'day')
+    d <- dplyr::filter(d, !is.na(sitecode))
+    }
 
-  if (nrow(d_missing_sitecode) > 0) cli::cli_alert_warning('sitecode is missing for {nrow(d_missing_sitecode)} row{?s}')
-
-  d_missing_sitecode <- expand_dates(d_missing_sitecode)
+  # check for out of range dates
+  d <- dht::expand_dates(d, by = 'day')
+  d$year <- lubridate::year(d$date)
+  out_of_range_year <- sum(d$year < 2000 | d$year > 2016)
+  if (out_of_range_year > 0) {
+    cli::cli_alert_warning("Data is available from 2000 through 2016.")
+    cli::cli_alert_info(glue::glue("PM estimates for {out_of_range_year} dates{?s} will be NA due to unavailable data.\n"))
+    d_missing_date <- dplyr::filter(d, !year %in% 2000:2016)
+    d <- dplyr::filter(d, year %in% 2000:2016)
+  }
 
   message('Matching sitecodes to geohashes...')
-
   d <-
     d %>%
-    dplyr::filter(!is.na(sitecode)) %>%
-    expand_dates() %>%
     dplyr::left_join(schwartz_grid_geohashed,
                      by = c('sitecode')) %>%
     dplyr::filter(!is.na(gh6)) %>%
-    dplyr::mutate(gh3 = stringr::str_sub(gh6, 1, 3),
-                  year = lubridate::year(date)) %>%
+    dplyr::mutate(gh3 = stringr::str_sub(gh6, 1, 3)) %>%
     dplyr::left_join(gh3_combined_lookup, by = 'gh3')
 
   unique_gh3_year <-
@@ -118,6 +117,7 @@ add_schwartz_pollutants <- function(d, verbose = FALSE, ...) {
   d_pm <- dplyr::bind_rows(d_split_pm)
 
   if (nrow(d_missing_sitecode) > 0) d_pm <- dplyr::bind_rows(d_missing_sitecode, d_pm)
+  if (out_of_range_year > 0) d_pm <- dplyr::bind_rows(d_missing_date, d_pm)
 
   if ("index_date" %in% colnames(d)) {
    d_pm <- d_pm %>%
