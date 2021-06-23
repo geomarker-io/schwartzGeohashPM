@@ -90,3 +90,20 @@ example_output_out_of_order_cols <- function() {
   ) %>%
     dplyr::mutate_at(dplyr::vars(start_date, end_date, date), as.Date)
 }
+
+example_output_out_of_range_dates <- function() {
+  tibble::tribble(
+    ~id, ~lat,  ~lon, ~site_index,    ~sitecode,  ~start_date,    ~end_date,        ~date, ~year,     ~gh6,  ~gh3, ~gh3_combined, ~PM25, ~NO2,  ~O3,
+    "55000100280", 39.2, -84.6,   "9607238", 211050640897, "2020-01-01", "2020-01-02", "2020-01-01", 2020,  NA, NA, NA,   NA, NA, NA,
+    "55000100280", 39.2, -84.6,   "9607238", 211050640897, "2020-01-01", "2020-01-02", "2020-01-02", 2020,  NA, NA,  NA,  NA, NA, NA,
+    "55000100282", 39.2, -84.6,   "9607238", 211050640897, "2015-08-31", "2015-09-02", "2015-08-31", 2015,  "dngz52", "dng",  "dng",  12.3, 32.7, 33.6,
+    "55000100282", 39.2, -84.6,   "9607238", 211050640897, "2015-08-31", "2015-09-02", "2015-09-01", 2015,  "dngz52", "dng",  "dng",  17.9, 34.8,   44,
+    "55000100282", 39.2, -84.6,   "9607238", 211050640897, "2015-08-31", "2015-09-02", "2015-09-02", 2015,  "dngz52", "dng",  "dng",  22.8, 34.2, 48.6
+  ) %>%
+    dplyr::mutate_at(dplyr::vars(start_date, end_date, date), as.Date)
+}
+
+
+
+
+

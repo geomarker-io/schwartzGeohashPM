@@ -59,7 +59,7 @@ add_schwartz_pollutants <- function(d, verbose = FALSE, ...) {
   out_of_range_year <- sum(d$year < 2000 | d$year > 2016)
   if (out_of_range_year > 0) {
     cli::cli_alert_warning("Data is available from 2000 through 2016.")
-    cli::cli_alert_info(glue::glue("PM estimates for {out_of_range_year} dates{?s} will be NA due to unavailable data.\n"))
+    cli::cli_alert_warning("PM estimates for {out_of_range_year} date{?s} will be NA due to unavailable data.")
     d_missing_date <- dplyr::filter(d, !year %in% 2000:2016)
     d <- dplyr::filter(d, year %in% 2000:2016)
   }
