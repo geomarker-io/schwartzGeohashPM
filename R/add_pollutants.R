@@ -6,6 +6,10 @@ prep_data <- function(d) {
   d$start_date <- dht::check_dates(d$start_date)
   d$end_date <- dht::check_dates(d$end_date)
   dht::check_end_after_start_date(d$start_date, d$end_date)
+
+  if('index_date' %in% colnames(d)) {
+    d$index_date <- dht::check_dates(d$index_date)
+  }
   return(d)
 }
 
